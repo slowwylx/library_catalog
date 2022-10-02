@@ -1,16 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.library.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+
+<VBox fx:id="mainVbox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="300.0" minWidth="500.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.HelloController">
+   <children>
+      <AnchorPane fx:id="headPane" prefHeight="48.0" prefWidth="600.0" style="-fx-background-color: #00004A;">
+         <children>
+            <Text fx:id="headerText" fill="WHITE" fontSmoothingType="LCD" layoutX="6.0" layoutY="37.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Library" wrappingWidth="98.67431640625">
+               <font>
+                  <Font size="29.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+      <ComboBox fx:id="typesOfPapers" prefWidth="601.0" />
+      <AnchorPane fx:id="middlePane" prefHeight="110.0" prefWidth="600.0">
+         <children>
+            <Button fx:id="addButton" layoutX="14.0" layoutY="80.0" mnemonicParsing="false" text="Add" />
+            <Button fx:id="deleteButton" layoutX="534.0" layoutY="80.0" mnemonicParsing="false" text="Delete" />
+            <Button fx:id="giveOutButton" layoutX="473.0" layoutY="80.0" mnemonicParsing="false" text="Give out" />
+         </children>
+      </AnchorPane>
+      <ListView fx:id="mainList" prefHeight="200.0" prefWidth="200.0" />
+   </children>
 </VBox>
