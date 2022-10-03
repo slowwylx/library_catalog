@@ -52,7 +52,5 @@ public class HelloController {
      addButton.setOnAction(actionEvent -> {
 
      });
-
     }
-
 }
