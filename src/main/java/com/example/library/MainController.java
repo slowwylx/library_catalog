@@ -1,5 +1,6 @@
 package com.example.library;
 
+import com.example.library.literature.Book;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 public class MainController {
+    private Book books;
 
     @FXML
     private ResourceBundle resources;
@@ -57,7 +59,7 @@ public class MainController {
     void initialize() {
      addButton.setOnAction(actionEvent -> {
          FXMLLoader loader = new FXMLLoader();
-         loader.setLocation(getClass().getResource("add-view.fxml"));
+         loader.setLocation(LibraryApplication.class.getResource("add-view.fxml"));
          try {
              loader.load();
          } catch (IOException e) {
@@ -68,6 +70,11 @@ public class MainController {
          stage.initModality(Modality.APPLICATION_MODAL);
          stage.setScene(new Scene(root));
          stage.showAndWait();
+     });
+
+     deleteButton.setOnAction(actionEvent -> {
+         int selectedIndex = books.getSelectionModel().getSelectedIndex();
+         books.getItems().remove(selectedIndex);
      });
     }
 }
