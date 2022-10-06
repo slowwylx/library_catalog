@@ -18,6 +18,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.Pane;
 
 public class MainController {
     private Book books;
@@ -38,19 +41,31 @@ public class MainController {
     private Button giveOutButton;
 
     @FXML
-    private AnchorPane headPane;
+    private Pane headPane;
 
     @FXML
     private Text headerText;
 
     @FXML
-    private ListView<?> mainList;
+    private TableView<?> mainTable;
 
     @FXML
     private VBox mainVbox;
 
     @FXML
     private AnchorPane middlePane;
+
+    @FXML
+    private TableColumn<?, ?> tableAuthor;
+
+    @FXML
+    private TableColumn<Book, String> tableName;
+
+    @FXML
+    private TableColumn<?, ?> tableNumber;
+
+    @FXML
+    private TableColumn<?, ?> tableStatus;
 
     @FXML
     private ComboBox<?> typesOfPapers;
@@ -71,14 +86,5 @@ public class MainController {
          stage.setScene(new Scene(root));
          stage.showAndWait();
      });
-
-     deleteButton.setOnAction(actionEvent -> {
-         int selectedIndex = books.getSelectionModel().getSelectedIndex();
-         books.getItems().remove(selectedIndex);
-     });
     }
 }
-
-
-
-
