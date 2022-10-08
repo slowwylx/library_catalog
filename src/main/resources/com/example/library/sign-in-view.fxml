@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane fx:id="userAccANCHORpane" prefHeight="400.0" prefWidth="376.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.UserAccountingController">
+   <children>
+      <Pane fx:id="userAccANCHORpaneHEADER" prefHeight="31.0" prefWidth="379.0" style="-fx-background-color: #525564;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Text fx:id="userAccANCHORpaneHEADtext" fill="#ff5733" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User accounting" wrappingWidth="286.611328125">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+      <TextField fx:id="searchUser" layoutX="7.0" layoutY="52.0" promptText="Search" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
+      <TableView fx:id="usersTableview" layoutY="88.0" prefHeight="312.0" prefWidth="379.0" style="-fx-background-color: #FEF6EB;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="88.0">
+        <columns>
+          <TableColumn fx:id="usernameCol" prefWidth="124.0" style="-fx-background-color: #74828F;" text="Name" />
+          <TableColumn fx:id="userSecondNameCol" prefWidth="133.0" style="-fx-background-color: #74828F;" text="Second Name" />
+            <TableColumn fx:id="userPhoneCol" prefWidth="121.0" style="-fx-background-color: #74828F;" text="Phone Number" />
+        </columns>
+      </TableView>
+      <Button fx:id="chooseUserButton" layoutX="245.0" layoutY="52.0" mnemonicParsing="false" style="-fx-background-color: #bce085; -fx-background-radius: 10; -fx-border-radius: 10;" text="Choose" />
+      <Button fx:id="deleteUserButton" layoutX="313.0" layoutY="52.0" mnemonicParsing="false" style="-fx-background-color: #cc0c0c; -fx-border-radius: 10; -fx-background-radius: 10;" text="Delete" textFill="WHITE" />
+   </children>
+</AnchorPane>

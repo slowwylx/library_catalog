@@ -72,19 +72,42 @@ public class MainController {
 
     @FXML
     void initialize() {
-     addButton.setOnAction(actionEvent -> {
-         FXMLLoader loader = new FXMLLoader();
-         loader.setLocation(LibraryApplication.class.getResource("add-view.fxml"));
-         try {
-             loader.load();
-         } catch (IOException e) {
-             throw new RuntimeException(e);
-         }
-         Parent root = loader.getRoot();
-         Stage stage = new Stage();
-         stage.initModality(Modality.APPLICATION_MODAL);
-         stage.setScene(new Scene(root));
-         stage.showAndWait();
-     });
+        addButton.setOnAction(actionEvent -> {
+            addB();
+        });
+
+        giveOutButton.setOnAction(actionEvent -> {
+            giveOutB();
+        });
+
+    }
+
+    public void addB(){
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(LibraryApplication.class.getResource("add-view.fxml"));
+            try {
+                loader.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Parent root = loader.getRoot();
+            Stage stage = new Stage();
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setScene(new Scene(root));
+            stage.showAndWait();
+    }
+    public void giveOutB(){
+            FXMLLoader loaderGiveOut = new FXMLLoader();
+            loaderGiveOut.setLocation(LibraryApplication.class.getResource("give-out-view.fxml"));
+            try {
+                loaderGiveOut.load();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Parent rootGiveOut = loaderGiveOut.getRoot();
+            Stage stageGiveOut = new Stage();
+            stageGiveOut.initModality(Modality.APPLICATION_MODAL);
+            stageGiveOut.setScene(new Scene(rootGiveOut));
+            stageGiveOut.showAndWait();
     }
 }
