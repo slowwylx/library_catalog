@@ -1,26 +1,20 @@
 package com.example.library;
 
-import com.example.library.literature.Book;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+
+import com.example.library.literature.Book;
 
 public class MainController {
     private Book books;
@@ -36,6 +30,9 @@ public class MainController {
 
     @FXML
     private Button deleteButton;
+
+    @FXML
+    private Button editMainTableButton;
 
     @FXML
     private Button giveOutButton;
@@ -56,10 +53,16 @@ public class MainController {
     private AnchorPane middlePane;
 
     @FXML
+    private TableColumn<?, ?> pagesCol;
+
+    @FXML
+    private TextField searchLiteratureField;
+
+    @FXML
     private TableColumn<?, ?> tableAuthor;
 
     @FXML
-    private TableColumn<Book, String> tableName;
+    private TableColumn<?, ?> tableName;
 
     @FXML
     private TableColumn<?, ?> tableNumber;
@@ -71,43 +74,30 @@ public class MainController {
     private ComboBox<?> typesOfPapers;
 
     @FXML
+    private Button userButtonMain;
+
+    @FXML
+    private TableColumn<?, ?> yearOfPublishCol;
+    @FXML
     void initialize() {
         addButton.setOnAction(actionEvent -> {
-            addB();
+            Dlg.showWindow("Book add", "add-view.fxml", false );
         });
 
         giveOutButton.setOnAction(actionEvent -> {
-            giveOutB();
+            Dlg.showWindow("Question","give-out-view.fxml",false);
         });
 
-    }
+        userButtonMain.setOnAction(actionEvent -> {
+            Dlg.showWindow("Current users", "sign-in-view.fxml", true);
+        });
 
-    public void addB(){
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(LibraryApplication.class.getResource("add-view.fxml"));
-            try {
-                loader.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Parent root = loader.getRoot();
-            Stage stage = new Stage();
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setScene(new Scene(root));
-            stage.showAndWait();
-    }
-    public void giveOutB(){
-            FXMLLoader loaderGiveOut = new FXMLLoader();
-            loaderGiveOut.setLocation(LibraryApplication.class.getResource("give-out-view.fxml"));
-            try {
-                loaderGiveOut.load();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            Parent rootGiveOut = loaderGiveOut.getRoot();
-            Stage stageGiveOut = new Stage();
-            stageGiveOut.initModality(Modality.APPLICATION_MODAL);
-            stageGiveOut.setScene(new Scene(rootGiveOut));
-            stageGiveOut.showAndWait();
+        editMainTableButton.setOnAction(actionEvent -> {
+            Dlg.showWindow("Add/Edit", "add-view.fxml", false);
+        });
+
+        deleteButton.setOnAction(actionEvent -> {
+            Dlg.showWindow("Deleting", "delete-confirm.fxml", false);
+        });
     }
 }
