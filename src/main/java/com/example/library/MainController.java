@@ -2,13 +2,25 @@ package com.example.library;
 
 
 import java.net.URL;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.example.library.DBConnection.DBconnection;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -17,8 +29,6 @@ import javafx.scene.text.Text;
 import com.example.library.literature.Book;
 
 public class MainController {
-    private Book books;
-
     @FXML
     private ResourceBundle resources;
 
@@ -44,7 +54,7 @@ public class MainController {
     private Text headerText;
 
     @FXML
-    private TableView<?> mainTable;
+    private TableView<Book> mainTable;
 
     @FXML
     private VBox mainVbox;
@@ -53,22 +63,22 @@ public class MainController {
     private AnchorPane middlePane;
 
     @FXML
-    private TableColumn<?, ?> pagesCol;
+    private TableColumn<Book, Integer> pagesCol;
 
     @FXML
     private TextField searchLiteratureField;
 
     @FXML
-    private TableColumn<?, ?> tableAuthor;
+    private TableColumn<Book, String> tableAuthor;
 
     @FXML
-    private TableColumn<?, ?> tableName;
+    private TableColumn<Book, String>  tableName;
 
     @FXML
-    private TableColumn<?, ?> tableNumber;
+    private TableColumn<Book, Integer> tableNumber;
 
     @FXML
-    private TableColumn<?, ?> tableStatus;
+    private TableColumn<Book, String> tableStatus;
 
     @FXML
     private ComboBox<?> typesOfPapers;
@@ -77,9 +87,10 @@ public class MainController {
     private Button userButtonMain;
 
     @FXML
-    private TableColumn<?, ?> yearOfPublishCol;
+    private TableColumn<Book, Integer> yearOfPublishCol;
     @FXML
     void initialize() {
+        loadDate();
         addButton.setOnAction(actionEvent -> {
             Dlg.showWindow("Book add", "add-view.fxml", false );
         });
@@ -99,5 +110,49 @@ public class MainController {
         deleteButton.setOnAction(actionEvent -> {
             Dlg.showWindow("Deleting", "delete-confirm.fxml", false);
         });
+    }
+    private LibraryApplication mainApp;
+    String query = null;
+    Connection connection = null ;
+    PreparedStatement preparedStatement = null ;
+    ResultSet resultSet = null ;
+    Book books = null ;
+
+    ObservableList<Book> bookList = FXCollections.observableArrayList();
+
+    private void loadDate() {
+        connection = DBconnection.getDbConnection();
+        refreshTable();
+        //tableNumber.setCellValueFactory(cellData -> cellData.getValue().getId());
+        tableNumber.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tableName.setCellValueFactory(new PropertyValueFactory<>("name"));
+        pagesCol.setCellValueFactory(new PropertyValueFactory<>("pages"));
+        tableAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
+        yearOfPublishCol.setCellValueFactory(new PropertyValueFactory<>("yearOfissue"));
+        tableStatus.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
+
+    }
+
+    private void refreshTable() {
+        try {
+            bookList.clear();
+
+            query = "SELECT * FROM library.bookcharacter;";
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()){
+                bookList.add(new Book(
+                        resultSet.getInt("id"),
+                        resultSet.getString("nameOfBook"),
+                        resultSet.getInt("yearOfPublish"),
+                        resultSet.getInt("pages"),
+                        resultSet.getString("author"),
+                        resultSet.getBoolean("bookType")));
+                mainTable.setItems(bookList);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="mainVbox" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.MainController">
+<VBox fx:id="mainVbox" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="715.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.MainController">
    <children>
       <Pane fx:id="headPane" prefHeight="60.0" prefWidth="600.0" style="-fx-background-color: #525564;">
          <children>
@@ -21,28 +21,15 @@
                   <Font size="41.0" />
                </font>
             </Text>
-            <Button fx:id="userButtonMain" layoutX="541.0" layoutY="17.0" mnemonicParsing="false" style="-fx-background-color: #218C8D;" text="Users" />
+            <Button fx:id="userButtonMain" layoutX="555.0" layoutY="18.0" mnemonicParsing="false" style="-fx-background-color: #218C8D;" text="Users" />
          </children>
       </Pane>
-      <AnchorPane fx:id="middlePane" prefHeight="335.0" prefWidth="592.0" style="-fx-background-color: #FEF6EB;">
+      <AnchorPane fx:id="middlePane" prefHeight="109.0" prefWidth="715.0" style="-fx-background-color: #FEF6EB;">
          <children>
             <Button fx:id="addButton" layoutX="14.0" layoutY="79.0" mnemonicParsing="false" style="-fx-background-color: #bce085; -fx-border-radius: 10; -fx-background-radius: 10;" text="Add" />
-            <Button fx:id="deleteButton" layoutX="534.0" layoutY="80.0" mnemonicParsing="false" style="-fx-background-color: #cc0c0c; -fx-background-radius: 10; -fx-border-radius: 10;" text="Delete" textFill="WHITE" />
-            <Button fx:id="giveOutButton" layoutX="466.0" layoutY="80.0" mnemonicParsing="false" style="-fx-background-color: #BEB9B5; -fx-background-radius: 10; -fx-border-radius: 10;" text="Give out" />
+            <Button fx:id="deleteButton" layoutX="650.0" layoutY="80.0" mnemonicParsing="false" style="-fx-background-color: #cc0c0c; -fx-background-radius: 10; -fx-border-radius: 10;" text="Delete" textFill="WHITE" />
+            <Button fx:id="giveOutButton" layoutX="580.0" layoutY="80.0" mnemonicParsing="false" style="-fx-background-color: #BEB9B5; -fx-background-radius: 10; -fx-border-radius: 10;" text="Give out" />
             <ComboBox fx:id="typesOfPapers" prefHeight="25.0" prefWidth="600.0" promptText="Choose type of literature" style="-fx-background-color: #BEB9B5; -fx-background-radius: 0;" />
-            <TableView fx:id="mainTable" editable="true" layoutY="111.0" maxHeight="1.7976931348623157E308" prefHeight="225.0" prefWidth="600.0" style="-fx-background-color: #FEF6EB;" AnchorPane.bottomAnchor="0.0" AnchorPane.topAnchor="110.0">
-              <columns>
-                <TableColumn fx:id="tableNumber" maxWidth="150.0" prefWidth="26.0" style="-fx-background-color: #74828F;" text="#" />
-                <TableColumn fx:id="tableName" prefWidth="185.0" style="-fx-background-color: #74828F;" text="Name" />
-                  <TableColumn fx:id="pagesCol" prefWidth="44.0" style="-fx-background-color: #74828F;" text="Pages" />
-                  <TableColumn fx:id="yearOfPublishCol" prefWidth="77.0" style="-fx-background-color: #74828F;" text="Year of Issue" />
-                  <TableColumn fx:id="tableAuthor" maxWidth="2500.0" minWidth="0.0" prefWidth="179.0" style="-fx-background-color: #74828F;" text="Author" />
-                  <TableColumn fx:id="tableStatus" maxWidth="1500.0" prefWidth="94.0" style="-fx-background-color: #74828F;" text="Status" />
-              </columns>
-               <columnResizePolicy>
-                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-               </columnResizePolicy>
-            </TableView>
             <TextField fx:id="searchLiteratureField" layoutX="177.0" layoutY="78.0" promptText="Search" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 10;" />
             <Button fx:id="editMainTableButton" layoutX="61.0" layoutY="79.0" mnemonicParsing="false" style="-fx-background-color: #96C0CE; -fx-border-radius: 10; -fx-background-radius: 10;" text="Edit" />
          </children>
@@ -50,5 +37,18 @@
             <Insets />
          </VBox.margin>
       </AnchorPane>
+      <TableView fx:id="mainTable" editable="true" maxWidth="-Infinity" prefHeight="431.0" prefWidth="715.0" style="-fx-control-inner-background: #FFF8E1; -fx-control-inner-background-alt: #FFFDE7;">
+        <columns>
+          <TableColumn fx:id="tableNumber" maxWidth="30.0" prefWidth="23.0" style="-fx-background-color: #74828F;" text="#" />
+          <TableColumn fx:id="tableName" maxWidth="303.0" prefWidth="303.0" resizable="false" style="-fx-background-color: #74828F;" text="Name" />
+            <TableColumn fx:id="pagesCol" maxWidth="55.0" prefWidth="49.0" resizable="false" style="-fx-background-color: #74828F;" text="Pages" />
+            <TableColumn fx:id="yearOfPublishCol" maxWidth="100.0" prefWidth="91.0" resizable="false" style="-fx-background-color: #74828F;" text="Year of Issue" />
+            <TableColumn fx:id="tableAuthor" maxWidth="160.0" minWidth="0.0" prefWidth="157.0" resizable="false" style="-fx-background-color: #74828F;" text="Author" />
+            <TableColumn fx:id="tableStatus" maxWidth="100.0" prefWidth="90.0" style="-fx-background-color: #74828F;" text="Status" />
+        </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
    </children>
 </VBox>
