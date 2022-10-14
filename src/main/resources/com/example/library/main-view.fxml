@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -32,6 +33,7 @@
             <ComboBox fx:id="typesOfPapers" prefHeight="25.0" prefWidth="600.0" promptText="Choose type of literature" style="-fx-background-color: #BEB9B5; -fx-background-radius: 0;" />
             <TextField fx:id="searchLiteratureField" layoutX="177.0" layoutY="78.0" promptText="Search" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 10;" />
             <Button fx:id="editMainTableButton" layoutX="61.0" layoutY="79.0" mnemonicParsing="false" style="-fx-background-color: #96C0CE; -fx-border-radius: 10; -fx-background-radius: 10;" text="Edit" />
+            <FontAwesomeIconView fx:id="refreshIcon" glyphName="REFRESH" layoutX="105.0" layoutY="96.0" />
          </children>
          <VBox.margin>
             <Insets />

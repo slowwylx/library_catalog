@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.example.library.DBConnection.DBconnection;
+import com.example.library.literature.Literature;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,6 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 import com.example.library.literature.Book;
 
@@ -81,7 +83,7 @@ public class MainController {
     private TableColumn<Book, String> tableStatus;
 
     @FXML
-    private ComboBox<?> typesOfPapers;
+    private ComboBox<String> typesOfPapers;
 
     @FXML
     private Button userButtonMain;
@@ -89,8 +91,11 @@ public class MainController {
     @FXML
     private TableColumn<Book, Integer> yearOfPublishCol;
     @FXML
+    private FontAwesomeIconView refreshIcon;
+    @FXML
     void initialize() {
         loadDate();
+        loadComboBox();
         addButton.setOnAction(actionEvent -> {
             Dlg.showWindow("Book add", "add-view.fxml", false );
         });
@@ -109,6 +114,10 @@ public class MainController {
 
         deleteButton.setOnAction(actionEvent -> {
             Dlg.showWindow("Deleting", "delete-confirm.fxml", false);
+        });
+
+        refreshIcon.setOnMouseClicked(mouseEvent -> {
+            refreshTable();
         });
     }
     private LibraryApplication mainApp;
@@ -150,6 +159,26 @@ public class MainController {
                         resultSet.getString("author"),
                         resultSet.getBoolean("bookType")));
                 mainTable.setItems(bookList);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    ObservableList<Literature> literatureList = FXCollections.observableArrayList();
+
+    private void loadComboBox() {
+        try {
+            connection = DBconnection.getDbConnection();
+            query = "SELECT * FROM library.booktype;";
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            ObservableList<String> comboBox = FXCollections.observableArrayList();
+            while (resultSet.next()) {  // loop
+                literatureList.add(new Literature((resultSet.getString("bookType"))));
+                comboBox.add(resultSet.getString("bookType"));
+                typesOfPapers.setItems(comboBox);
+
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
