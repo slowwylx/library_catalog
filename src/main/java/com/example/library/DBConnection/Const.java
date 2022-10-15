@@ -8,4 +8,5 @@ public class Const {
     public static final String LITERATURE_AUTHOR = "author";
     public static final String LITERATURE_NAME = "nameOfBook";
     public static final String LITERATURE_YEAR = "yearOfPublish";
+    public static String LITERATURE_AVAILABILITY = "rent";
 }

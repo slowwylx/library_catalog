@@ -3,9 +3,10 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.stage.Stage;
 
-public class DeleteController {
+
+public class DeleteController extends MainController {
+
         @FXML
         private ResourceBundle resources;
 
@@ -21,9 +22,12 @@ public class DeleteController {
         @FXML
         void initialize() {
             cancelDelitionButton.setOnAction(actionEvent -> {
-                Stage stage = (Stage) cancelDelitionButton.getScene().getWindow();
-                // do what you have to do
-                stage.close();
+                cancelDelitionButton.getScene().getWindow().hide();
+            });
+
+            confirmDeletionButton.setOnAction(actionEvent -> {
+                confirmDel = true;
+               confirmDeletionButton.getScene().getWindow().hide();
             });
         }
 }

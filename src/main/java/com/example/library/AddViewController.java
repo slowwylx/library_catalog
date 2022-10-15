@@ -30,7 +30,11 @@ public class AddViewController {
 
     @FXML
     private Button toastConfirmAddButton;
+    @FXML
+    private TextField toastAddNumOfPages;
 
+    @FXML
+    private TextField toastAddYearOfIssue;
     @FXML
     void initialize() {
 
