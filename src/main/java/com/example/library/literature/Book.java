@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.example.library.DBConnection.Const.LITERATURE_AVAILABILITY;
+
 public class Book {
     private IntegerProperty id;
     private StringProperty name;
@@ -117,28 +119,4 @@ public class Book {
     public void setAuthor(String author) {
         this.author.set(author);
     }
-
-    ResultSet resultSet = null;
-    Connection connection = null ;
-    PreparedStatement preparedStatement = null ;
-    String query = null;
-
-//    void availableCheck(){
-//        try {
-//            connection = DBconnection.getDbConnection();
-//            query = "SELECT rent FROM library.isrented;";
-//            preparedStatement = connection.prepareStatement(query);
-//            resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()){
-//                if(resultSet==false) {
-//                isAvailable="Available";
-//                }else{
-//                    isAvailable="Rented";
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
-
 }

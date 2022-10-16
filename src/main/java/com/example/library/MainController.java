@@ -75,6 +75,7 @@ public class MainController {
     @FXML
     void initialize() {
         loadDate();
+        //availableCheck();
         loadComboBox();
         addButton.setOnAction(actionEvent -> {
             Dlg.showWindow("Book add", "add-view.fxml", false );
@@ -126,7 +127,25 @@ public class MainController {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+//    public void availableCheck(){
+//        try {
+//            connection = DBconnection.getDbConnection();
+//            query = "SELECT rented FROM library.isrented;";
+//            preparedStatement = connection.prepareStatement(query);
+//            resultSet = preparedStatement.executeQuery();
+//            while (resultSet.next()){
+//                int id_Rented = resultSet.getInt("rented");
+////                String checkAvailable = resultSet.getString("rent");
+//                if(id_Rented==1){
+//                    tableStatus.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
+//                }else {
+//
+//                }
+//            }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//    }
     private void refreshTable() {
         try {
             bookList.clear();
