@@ -6,13 +6,6 @@ import javafx.scene.control.Button;
 
 
 public class DeleteController extends MainController {
-
-        @FXML
-        private ResourceBundle resources;
-
-        @FXML
-        private URL location;
-
         @FXML
         private Button cancelDelitionButton;
 

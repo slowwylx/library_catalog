@@ -70,8 +70,11 @@ public class MainController {
     private TableColumn<Book, Integer> yearOfPublishCol;
     @FXML
     private FontAwesomeIconView refreshIcon;
-
     static boolean confirmDel = false;
+    static boolean add = false;
+    static Book selectRow;
+
+
     @FXML
     void initialize() {
         loadDate();
@@ -88,8 +91,11 @@ public class MainController {
         userButtonMain.setOnAction(actionEvent -> {
             Dlg.showWindow("Current users", "sign-in-view.fxml", true);
         });
-
+    AddViewController addViewController;
         editMainTableButton.setOnAction(actionEvent -> {
+//            Book selectRow = mainTable.getSelectionModel().getSelectedItem();
+//                        addViewController.setTextField();
+            add = true;
             Dlg.showWindow("Add/Edit", "add-view.fxml", false);
         });
 
@@ -127,25 +133,6 @@ public class MainController {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-//    public void availableCheck(){
-//        try {
-//            connection = DBconnection.getDbConnection();
-//            query = "SELECT rented FROM library.isrented;";
-//            preparedStatement = connection.prepareStatement(query);
-//            resultSet = preparedStatement.executeQuery();
-//            while (resultSet.next()){
-//                int id_Rented = resultSet.getInt("rented");
-////                String checkAvailable = resultSet.getString("rent");
-//                if(id_Rented==1){
-//                    tableStatus.setCellValueFactory(new PropertyValueFactory<>("isAvailable"));
-//                }else {
-//
-//                }
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
     private void refreshTable() {
         try {
             bookList.clear();
@@ -166,6 +153,8 @@ public class MainController {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 
     ObservableList<Literature> literatureList = FXCollections.observableArrayList();
 
@@ -199,5 +188,4 @@ public class MainController {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 }

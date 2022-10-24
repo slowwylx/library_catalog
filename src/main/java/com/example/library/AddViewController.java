@@ -15,23 +15,10 @@ import com.example.library.literature.Literature;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
 public class AddViewController {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
-
-    @FXML
-    private AnchorPane toastAdd;
-
     @FXML
     private TextField toastAddAuthor;
 
@@ -62,72 +49,48 @@ public class AddViewController {
     ResultSet resultSet = null;
     PreparedStatement preparedStatement;
     Book book = null;
-    private boolean update;
+
 
     private void save() {
         try {
             connection = DBconnection.getDbConnection();
-            String name = toastAddName.getText();
-            String author = toastAddAuthor.getText();
-            String numOfPages = toastAddNumOfPages.getText();
-            String yearOfIssue = toastAddYearOfIssue.getText();
+            String name = toastAddName.getText().trim();
+            String author = toastAddAuthor.getText().trim();
+            String numOfPages = toastAddNumOfPages.getText().trim();
+            String yearOfIssue = toastAddYearOfIssue.getText().trim();
             String type = toastAddChoosePicker.getSelectionModel().getSelectedItem();
             if(type.equals("Book")){
                 type = "1";
             }
             System.out.println(type);
             String rent = "2";
-            String bookid ="5";
 
-//            INSERT INTO `library`.`bookcharacter` (`id`, `nameOfBook`, `pages`, `yearOfPublish`, `author`, `bookType`, `rented`) VALUES ('1', 'Book1', '201', 2001, 'Myloki', '1', '2');
-            query = "INSERT INTO `bookcharacter`(`id`, `nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType` , `rented`) VALUES (?,?,?,?,?,?,?)";
-
-//        else{
-//            query = "UPDATE `library`.`bookcharacter` SET "  + "`nameOfBook`=?," + "`author`= ?," + "`pages`=?," + "`yearOfPublish`=?,"  + "`bookType`=?, WHERE id = '"+bookId+"'";
-//        }
+    if(!MainController.add) {
+        query = "INSERT INTO `bookcharacter`(`nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType` , `rented`) VALUES (?,?,?,?,?,?)";
+    }else{
+        query = "UPDATE `library`.`bookcharacter` SET `nameOfBook` = '?', `pages` = '?', `yearOfPublish` = '?', `author` = '?', `bookType` = '?', `rented` = '?' WHERE (`id` = '"+book.getId()+"');";
+        }
 
             preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, bookid);
-            preparedStatement.setString(2, name);
-            preparedStatement.setString(3, author);
-            preparedStatement.setString(4, numOfPages);
-            preparedStatement.setString(5, yearOfIssue);
-            preparedStatement.setString(6, type);
-            preparedStatement.setString(7, rent);
+            preparedStatement.setString(1, name);
+            preparedStatement.setString(2, author);
+            preparedStatement.setString(3, numOfPages);
+            preparedStatement.setString(4, yearOfIssue);
+            preparedStatement.setString(5, type);
+            preparedStatement.setString(6, rent);
             int status =  preparedStatement.executeUpdate();
-
-            if(status==1){
-                System.out.println("added");
-            }else{
-                System.out.println("dont added");
-            }
         }catch(SQLException ex){
             Logger.getLogger(AddViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
-//    int bookId = 5;
-//    private void getQuery() {
-//        if (update == false) {
-////            INSERT INTO `library`.`bookcharacter` (`id`, `nameOfBook`, `pages`, `yearOfPublish`, `author`, `bookType`, `rented`) VALUES ('1', 'Book1', '201', 2001, 'Myloki', '1', '2');
-//            query = "INSERT INTO `bookcharacter`( `nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType`) VALUES (?,?,?,?,?)";
-//        }else{
-//            query = "UPDATE `library`.`bookcharacter` SET "  + "`nameOfBook`=?," + "`author`= ?," + "`pages`=?," + "`yearOfPublish`=?,"  + "`bookType`=?, WHERE id = '"+bookId+"'";
-//        }
-//    }
-//    private void insert() {
-//        try {
-//            preparedStatement = connection.prepareStatement(query);
-//            preparedStatement.setString(1, toastAddName.getText());
-//            preparedStatement.setString(2, toastAddAuthor.getText());
-//            preparedStatement.setString(3, toastAddNumOfPages.getText());
-//            preparedStatement.setString(4, toastAddYearOfIssue.getText());
-//            preparedStatement.setString(5, toastAddChoosePicker.getValue().toString());
-//            preparedStatement.execute();
-//        } catch (SQLException ex) {
-//            Logger.getLogger(AddViewController.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+    int bookId;
+    void setTextField(int id, String name, String author, String numOfPages, String yearOfIssue) {
+        bookId = id;
+        name = toastAddName.getText();
+        author = toastAddAuthor.getText();
+        numOfPages = toastAddNumOfPages.getText();
+        yearOfIssue = toastAddYearOfIssue.getText();
+    }
     ObservableList<Literature> literatureList = FXCollections.observableArrayList();
 
     private void loadComboBox() {
@@ -147,7 +110,4 @@ public class AddViewController {
         }
     }
 
-    void setUpdate(boolean b) {
-        this.update = b;
-    }
 }
