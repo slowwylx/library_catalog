@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +16,8 @@ import com.example.library.DBConnection.DBconnection;
 import com.example.library.literature.Literature;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
@@ -78,6 +81,9 @@ public class MainController {
     @FXML
     void initialize() {
         loadDate();
+        searchLiteratureField.setOnAction(actionEvent -> {
+            search();
+        });
         //availableCheck();
         loadComboBox();
         addButton.setOnAction(actionEvent -> {
@@ -117,7 +123,7 @@ public class MainController {
     ResultSet resultSet = null ;
     Book book = null ;
 
-    ObservableList<Book> bookList = FXCollections.observableArrayList();
+   private final ObservableList<Book> bookList = FXCollections.observableArrayList();
 
     private void loadDate() {
         try {
@@ -187,5 +193,36 @@ public class MainController {
         } catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+
+    private void search(){
+        FilteredList<Book> filteredData = new FilteredList<>(bookList,b->true);
+        searchLiteratureField.textProperty().addListener((observableValue, oldValue, newValue) ->{
+            filteredData.setPredicate(book -> {
+                if(newValue == null || newValue.isEmpty()){
+                    return true;
+                }
+                String lowerCase = newValue.toLowerCase();
+                if (book.getName().toLowerCase().contains(lowerCase)) {
+                    return true; // Filter matches name.
+                } else if (book.getAuthor().toLowerCase().contains(lowerCase)) {
+                    return true; // Filter matches author.
+                }
+                else if (String.valueOf(book.getYearOfissue()).contains(lowerCase))
+                    return true;
+                else
+                    return false; // Does not match.
+            });
+        });
+        // 3. Wrap the FilteredList in a SortedList.
+        SortedList<Book> sortedData = new SortedList<>(filteredData);
+
+        // 4. Bind the SortedList comparator to the TableView comparator.
+        // 	  Otherwise, sorting the TableView would have no effect.
+        sortedData.comparatorProperty().bind(mainTable.comparatorProperty());
+
+        // 5. Add sorted (and filtered) data to the table.
+        mainTable.setItems(sortedData);
     }
 }
