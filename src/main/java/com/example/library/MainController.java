@@ -81,9 +81,6 @@ public class MainController {
     @FXML
     void initialize() {
         loadDate();
-        searchLiteratureField.setOnAction(actionEvent -> {
-            search();
-        });
         //availableCheck();
         loadComboBox();
         addButton.setOnAction(actionEvent -> {
@@ -104,7 +101,9 @@ public class MainController {
             add = true;
             Dlg.showWindow("Add/Edit", "add-view.fxml", false);
         });
-
+        searchLiteratureField.setOnAction(actionEvent -> {
+            search();
+        });
         deleteButton.setOnAction(actionEvent -> {
             Dlg.showWindow("Deleting", "delete-confirm.fxml", false);
             if(confirmDel){
