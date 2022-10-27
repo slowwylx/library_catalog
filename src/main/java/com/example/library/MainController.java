@@ -1,14 +1,11 @@
 package com.example.library;
 
 
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,6 +17,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
@@ -32,97 +30,88 @@ import static com.example.library.DBConnection.Const.*;
 public class MainController {
     @FXML
     private Button addButton;
-
     @FXML
     private Button deleteButton;
-
     @FXML
     private Button editMainTableButton;
-
     @FXML
     private Button giveOutButton;
-
     @FXML
-    protected TableView<Book> mainTable;
-
+    private TableView<Book> mainTable;
     @FXML
     private TableColumn<Book, Integer> pagesCol;
-
     @FXML
     private TextField searchLiteratureField;
-
     @FXML
     private TableColumn<Book, String> tableAuthor;
-
     @FXML
     private TableColumn<Book, String>  tableName;
-
     @FXML
     private TableColumn<Book, Integer> tableNumber;
-
     @FXML
     private TableColumn<Book, String> tableStatus;
-
     @FXML
     private ComboBox<String> typesOfPapers;
-
     @FXML
     private Button userButtonMain;
-
     @FXML
     private TableColumn<Book, Integer> yearOfPublishCol;
     @FXML
     private FontAwesomeIconView refreshIcon;
     static boolean confirmDel = false;
     static boolean add = false;
-    static Book selectRow;
-
-
-    @FXML
-    void initialize() {
-        loadDate();
-        //availableCheck();
-        loadComboBox();
-        addButton.setOnAction(actionEvent -> {
-            Dlg.showWindow("Book add", "add-view.fxml", false );
-        });
-
-        giveOutButton.setOnAction(actionEvent -> {
-            Dlg.showWindow("Question","give-out-view.fxml",false);
-        });
-
-        userButtonMain.setOnAction(actionEvent -> {
-            Dlg.showWindow("Current users", "sign-in-view.fxml", true);
-        });
-    AddViewController addViewController;
-        editMainTableButton.setOnAction(actionEvent -> {
-//            Book selectRow = mainTable.getSelectionModel().getSelectedItem();
-//                        addViewController.setTextField();
-            add = true;
-            Dlg.showWindow("Add/Edit", "add-view.fxml", false);
-        });
-        searchLiteratureField.setOnAction(actionEvent -> {
-            search();
-        });
-        deleteButton.setOnAction(actionEvent -> {
-            Dlg.showWindow("Deleting", "delete-confirm.fxml", false);
-            if(confirmDel){
-                deletion();
-            }
-        });
-
-        refreshIcon.setOnMouseClicked(mouseEvent -> {
-            refreshTable();
-        });
-    }
-
+    public static Book selectRow;
     String query = null;
     Connection connection = null ;
     PreparedStatement preparedStatement = null ;
     ResultSet resultSet = null ;
     Book book = null ;
 
-   private final ObservableList<Book> bookList = FXCollections.observableArrayList();
+    private final ObservableList<Book> bookList = FXCollections.observableArrayList();
+
+    private AddViewController addViewController;
+
+    @FXML
+    void initialize() {
+        System.out.println(Thread.activeCount());
+        loadDate();
+        loadComboBox();
+        search();
+        addButton.setOnAction(actionEvent -> {
+            add = false;
+            Dlg.showWindow("add-view.fxml", false,null);
+            refreshTable();
+        });
+
+        giveOutButton.setOnAction(actionEvent -> {
+            Dlg.showWindow("give-out-view.fxml", false,null);
+            //Dlg.showWindow("Question","give-out-view.fxml",false);
+        });
+
+        userButtonMain.setOnAction(actionEvent -> {
+            Dlg.showWindow("sign-in-view.fxml", false,null);
+            //Dlg.showWindow("Current users", "sign-in-view.fxml", true);
+        });
+
+        editMainTableButton.setOnAction(actionEvent -> {
+            add = true;
+            selectRow = mainTable.getSelectionModel().getSelectedItem();
+                addViewController=Dlg.showWindow("add-view.fxml",false,(AddViewController controller) ->{
+                controller.setTextField(selectRow.getId(),selectRow.getName(),selectRow.getAuthor(),selectRow.getPages(),selectRow.getYearOfissue());
+            });
+            refreshTable();
+        });
+        deleteButton.setOnAction(actionEvent -> {
+            Dlg.showWindow("delete-confirm.fxml", false,null);
+            //Dlg.showWindow("Deleting", "delete-confirm.fxml", false);
+            if(confirmDel){
+                deletion();
+            }
+        });
+        refreshIcon.setOnMouseClicked(mouseEvent -> {
+            refreshTable();
+        });
+    }
 
     private void loadDate() {
         try {
@@ -138,6 +127,7 @@ public class MainController {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     private void refreshTable() {
         try {
             bookList.clear();
@@ -159,10 +149,7 @@ public class MainController {
         }
     }
 
-
-
     ObservableList<Literature> literatureList = FXCollections.observableArrayList();
-
     private void loadComboBox() {
         try {
             connection = DBconnection.getDbConnection();
@@ -189,39 +176,36 @@ public class MainController {
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.execute();
             refreshTable();
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-
+    FilteredList<Book> filteredData = new FilteredList<>(bookList,b->true);
     private void search(){
-        FilteredList<Book> filteredData = new FilteredList<>(bookList,b->true);
         searchLiteratureField.textProperty().addListener((observableValue, oldValue, newValue) ->{
             filteredData.setPredicate(book -> {
                 if(newValue == null || newValue.isEmpty()){
                     return true;
                 }
                 String lowerCase = newValue.toLowerCase();
-                if (book.getName().toLowerCase().contains(lowerCase)) {
+                if(book.getName().toLowerCase().contains(lowerCase)) {
                     return true; // Filter matches name.
-                } else if (book.getAuthor().toLowerCase().contains(lowerCase)) {
+                } else if(book.getAuthor().toLowerCase().contains(lowerCase)) {
                     return true; // Filter matches author.
                 }
-                else if (String.valueOf(book.getYearOfissue()).contains(lowerCase))
+                else if(String.valueOf(book.getYearOfissue()).contains(lowerCase)) {
                     return true;
+                }
                 else
                     return false; // Does not match.
             });
         });
-        // 3. Wrap the FilteredList in a SortedList.
         SortedList<Book> sortedData = new SortedList<>(filteredData);
-
-        // 4. Bind the SortedList comparator to the TableView comparator.
-        // 	  Otherwise, sorting the TableView would have no effect.
         sortedData.comparatorProperty().bind(mainTable.comparatorProperty());
-
-        // 5. Add sorted (and filtered) data to the table.
         mainTable.setItems(sortedData);
+    }
+
+    private void filtr(){
     }
 }

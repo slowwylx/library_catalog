@@ -1,11 +1,9 @@
 package com.example.library;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 
-public class DeleteController extends MainController {
+public class DeleteController {
         @FXML
         private Button cancelDelitionButton;
 
@@ -19,7 +17,7 @@ public class DeleteController extends MainController {
             });
 
             confirmDeletionButton.setOnAction(actionEvent -> {
-                confirmDel = true;
+                MainController.confirmDel = true;
                confirmDeletionButton.getScene().getWindow().hide();
             });
         }

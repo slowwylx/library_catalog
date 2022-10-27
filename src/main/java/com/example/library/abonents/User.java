@@ -20,6 +20,10 @@ public class User {
         this.id = new SimpleIntegerProperty(id);
     }
 
+    public User() {
+
+    }
+
     public String getUserName() {
         return userName.get();
     }
