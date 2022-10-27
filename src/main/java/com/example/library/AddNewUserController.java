@@ -23,7 +23,7 @@ public class AddNewUserController {
         private TextField registrSecondNameField;
 
         private ResultSet resultSet;
-
+        String phn2;
         @FXML
         void initialize() {
                 confirmRegistrButton.setOnAction(actionEvent -> {
@@ -36,28 +36,52 @@ public class AddNewUserController {
         Connection connection = null;
         PreparedStatement preparedStatement;
 
+
         public void saveUser(){
                 try {
-                        connection = DBconnection.getDbConnection();
-                        String name = registrNameField.getText().trim();
-                        String secondName = registrSecondNameField.getText().trim();
-                        String phone = registrPhoneField.getText().trim();
-                        String bookrent = null;
-                        query = "INSERT INTO `users`(`book`, `userName`, `userSecondName`, `userPhone`) VALUES (?,?,?,?)";
-                        //fix bug with book which is rented
-                        preparedStatement = connection.prepareStatement(query);
-                        preparedStatement.setString(1, bookrent);
-                        preparedStatement.setString(2, name);
-                        preparedStatement.setString(3, secondName);
-                        preparedStatement.setString(4, phone);
-                        preparedStatement.executeUpdate();
-                } catch (
-                        SQLException ex) {
+                        phn2 = registrPhoneField.getText();
+                        if(check()==1){
+                                System.out.println("This user is already reg!");
+                        }else {
+                                connection = DBconnection.getDbConnection();
+                                String name = registrNameField.getText().trim();
+                                String secondName = registrSecondNameField.getText().trim();
+                                String phone = registrPhoneField.getText().trim();
+                                String bookrent = null;
+                                query = "INSERT INTO `users`(`book`, `userName`, `userSecondName`, `userPhone`) VALUES (?,?,?,?)";
+                                //fix bug with book which is rented
+                                preparedStatement = connection.prepareStatement(query);
+                                preparedStatement.setString(1, bookrent);
+                                preparedStatement.setString(2, name);
+                                preparedStatement.setString(3, secondName);
+                                preparedStatement.setString(4, phone);
+                                preparedStatement.executeUpdate();
+                        }
+                } catch ( SQLException ex) {
                         Logger.getLogger(AddNewUserController.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
 
+        private int check(){
+                Connection connection = null;
+                PreparedStatement preparedStatement = null;
+                ResultSet resultSet = null;
+                int isExist = 0;
+                String quer2 = "SELECT * FROM users WHERE userPhone =?";
+                try {
+                        connection = DBconnection.getDbConnection();
+                        preparedStatement = connection.prepareStatement(quer2);
+                        preparedStatement.setString(1,phn2);
+                        resultSet = preparedStatement.executeQuery();
 
+                        if(resultSet.isBeforeFirst()){
+                                isExist = 1;
+                        }
+                }catch (SQLException ex){
+                        ex.printStackTrace();
+                }
+                return isExist;
+        }
 }
 
 
