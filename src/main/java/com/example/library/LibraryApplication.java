@@ -16,10 +16,11 @@ public class LibraryApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(LibraryApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 715, 600);
+        //stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("JustLibrary!");
         stage.setScene(scene);
         stage.show();
-        //stage.initStyle(StageStyle.TRANSPARENT);
+
     }
 
     public static void main(String[] args) {

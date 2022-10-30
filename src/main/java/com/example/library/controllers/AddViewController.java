@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,13 +8,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.example.library.DBConnection.DBconnection;
-import com.example.library.literature.Book;
+
 import com.example.library.literature.Literature;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
+import static com.example.library.service.Global.*;
 public class AddViewController {
     @FXML
     private TextField toastAddAuthor;
@@ -42,7 +42,7 @@ public class AddViewController {
     Connection connection = null;
     ResultSet resultSet = null;
     PreparedStatement preparedStatement;
-    private String rent = "2";
+    private String rent = "1";
     private String type;
     boolean check = false;
 
@@ -61,8 +61,8 @@ public class AddViewController {
             insert();
         }
         private void getQuery () {
-            if (!MainController.add) {
-                query = "INSERT INTO `bookcharacter`(`nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType` , `rented`) VALUES (?,?,?,?,?,?)";
+            if (!add) {
+                query = "INSERT INTO `bookcharacter`(`nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType` , `isrented`) VALUES (?,?,?,?,?,?)";
                 check = false;
             } else {
                 check = true;
@@ -71,8 +71,7 @@ public class AddViewController {
                         "   `author` = ?," +
                         "   `pages` = ?," +
                         "   `yearOfPublish` = ?," +
-                        "   `bookType` = ?," +
-                        "   `rented` = ? WHERE (`id` = '" + MainController.selectRow.getId() + "')";
+                        "   `bookType` = ? WHERE (`id` = '" + selectRow.getId() + "')";
             }
         }
         private void insert () {
@@ -83,10 +82,11 @@ public class AddViewController {
             preparedStatement.setString(3, toastAddNumOfPages.getText());
             preparedStatement.setString(4, toastAddYearOfIssue.getText());
             preparedStatement.setString(5, type);
-            preparedStatement.setString(6, rent);
             if(!check) {
+                preparedStatement.setString(6, rent);
                 preparedStatement.executeUpdate();
             }else {
+
                 preparedStatement.execute();
             }
         }catch(SQLException ex){

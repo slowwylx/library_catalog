@@ -5,7 +5,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="toastAdd" prefHeight="242.0" prefWidth="300.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.AddViewController">
+<AnchorPane fx:id="toastAdd" prefHeight="242.0" prefWidth="300.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.AddViewController">
    <children>
       <TextField fx:id="toastAddName" layoutX="32.0" layoutY="75.0" promptText="Book Name" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
       <TextField fx:id="toastAddAuthor" layoutX="32.0" layoutY="114.0" promptText="Author" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />

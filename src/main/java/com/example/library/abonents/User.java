@@ -11,17 +11,38 @@ public class User {
     private StringProperty userNumber;
     private IntegerProperty userRentedBook;
     private IntegerProperty id;
+    private StringProperty address;
 
-    public User(String userName, String userSecondname, String userNumber, int userRentedBook, int id) {
+    public User(String userName, String userSecondname, String userNumber, int userRentedBook, int id,String address) {
         this.userName =new SimpleStringProperty(userName);
         this.userSecondname =new SimpleStringProperty(userSecondname);
         this.userNumber = new SimpleStringProperty(userNumber);
         this.userRentedBook = new SimpleIntegerProperty(userRentedBook);
         this.id = new SimpleIntegerProperty(id);
+        this.address = new SimpleStringProperty(address);
     }
 
     public User() {
 
+    }
+
+    public User(String userName, String userSecondName, String userPhone, int id) {
+        this.userName =new SimpleStringProperty(userName);
+        this.userSecondname =new SimpleStringProperty(userSecondName);
+        this.userNumber = new SimpleStringProperty(userPhone);
+        this.id = new SimpleIntegerProperty(id);
+    }
+
+    public String getAddress() {
+        return address.get();
+    }
+
+    public StringProperty addressProperty() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address.set(address);
     }
 
     public String getUserName() {

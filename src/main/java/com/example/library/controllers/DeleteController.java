@@ -1,7 +1,7 @@
-package com.example.library;
+package com.example.library.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-
+import static com.example.library.service.Global.*;
 
 public class DeleteController {
         @FXML
@@ -17,7 +17,7 @@ public class DeleteController {
             });
 
             confirmDeletionButton.setOnAction(actionEvent -> {
-                MainController.confirmDel = true;
+                confirmDel = true;
                confirmDeletionButton.getScene().getWindow().hide();
             });
         }

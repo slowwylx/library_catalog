@@ -8,8 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<AnchorPane prefHeight="185.0" prefWidth="272.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.AddNewUserController">
+<AnchorPane prefHeight="185.0" prefWidth="272.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.AddNewUserController">
    <children>
       <Pane prefHeight="30.0" prefWidth="272.0" style="-fx-background-color: #525564;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -24,5 +23,20 @@
       <TextField fx:id="registrSecondNameField" layoutX="14.0" layoutY="86.0" promptText="Second Name" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
       <PasswordField fx:id="registrPhoneField" layoutX="14.0" layoutY="128.0" promptText="Phone" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
       <Button fx:id="confirmRegistrButton" layoutX="199.0" layoutY="129.0" mnemonicParsing="false" style="-fx-background-color: #bce085; -fx-border-radius: 5;" text="Confirm" />
+      <Text fx:id="nameErrField" fill="RED" layoutX="23.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="134.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="secondNameErrField" fill="RED" layoutX="23.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="134.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="phoneErrField" fill="RED" layoutX="23.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="134.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>

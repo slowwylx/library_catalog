@@ -1,18 +1,5 @@
 package com.example.library.literature;
-import com.example.library.DBConnection.DBconnection;
-import com.example.library.MainController;
 import javafx.beans.property.*;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static com.example.library.DBConnection.Const.LITERATURE_AVAILABILITY;
 
 public class Book {
     private IntegerProperty id;
@@ -34,6 +21,14 @@ public class Book {
 
     public Book(){
 
+    }
+
+    public Book(int id5, String name5, int year5, int pages5, String author5) {
+        this.id=new SimpleIntegerProperty(id5);
+        this.name = new SimpleStringProperty(name5);
+        this.yearOfissue = new SimpleIntegerProperty(year5);
+        this.pages = new SimpleIntegerProperty(pages5);
+        this.author = new SimpleStringProperty(author5);
     }
 
     public int getId() {

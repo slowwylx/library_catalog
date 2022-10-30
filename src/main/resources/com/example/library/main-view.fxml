@@ -8,13 +8,23 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="mainVbox" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="715.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.MainController">
+<VBox fx:id="mainVbox" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="600.0" prefWidth="715.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.library.controllers.MainController">
    <children>
+      <HBox fx:id="headHbox" alignment="CENTER" prefHeight="19.0" prefWidth="715.0" style="-fx-background-color: #030224;">
+         <children>
+            <FontAwesomeIconView fx:id="closeButton" fill="RED" glyphName="CLOSE" onMouseClicked="#close">
+               <HBox.margin>
+                  <Insets left="705.0" />
+               </HBox.margin>
+            </FontAwesomeIconView>
+         </children>
+      </HBox>
       <Pane fx:id="headPane" prefHeight="60.0" prefWidth="600.0" style="-fx-background-color: #525564;">
          <children>
             <Text fx:id="headerText" fill="#ff5733" layoutY="46.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Library" wrappingWidth="152.0">

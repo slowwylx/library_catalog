@@ -1,4 +1,4 @@
-package com.example.library;
+package com.example.library.controllers;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.example.library.DBConnection.DBconnection;
+import com.example.library.Dlg;
 import com.example.library.abonents.User;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import javafx.collections.FXCollections;
@@ -19,7 +20,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import static com.example.library.MainController.confirmDel;
+import static com.example.library.service.Global.*;
 
 public class UserAccountingController {
         @FXML
@@ -40,6 +41,12 @@ public class UserAccountingController {
         private TableView<User> usersTableview;
         @FXML
         private FontAwesomeIconView addNewUser;
+        String query = null;
+        Connection connection = null ;
+        PreparedStatement preparedStatement = null ;
+        ResultSet resultSet = null ;
+        User user = null ;
+        private AbonentController abonentController;
 
         @FXML
         void initialize() {
@@ -48,23 +55,22 @@ public class UserAccountingController {
                 search();
                 deleteUserButton.setOnAction(actionEvent -> {
                         Dlg.showWindow("delete-confirm.fxml", false,null);
-                        //Dlg.showWindow("Confirm", "delete-confirm.fxml",false);
                         if(confirmDel){
                                 deletion();
                         }
                 });
                 addNewUser.setOnMouseClicked(mouseEvent -> {
                         Dlg.showWindow("add-new-user.fxml", false,null);
-                        //Dlg.showWindow("Add new user", "add-new-user.fxml", false);
                         addNewUser.getScene().getWindow().hide();
+                });
+                chooseUserButton.setOnAction(actionEvent -> {
+                        selectUser = usersTableview.getSelectionModel().getSelectedItem();
+                        abonentController=Dlg.showWindow("abonent-card.fxml",false,null);
+                        chooseUserButton.getScene().getWindow().hide();
                 });
         }
 
-        String query = null;
-        Connection connection = null ;
-        PreparedStatement preparedStatement = null ;
-        ResultSet resultSet = null ;
-        User user = null ;
+
 
         ObservableList<User> userList = FXCollections.observableArrayList();
 
@@ -73,24 +79,25 @@ public class UserAccountingController {
                         usernameCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
                         userSecondNameCol.setCellValueFactory(new PropertyValueFactory<>("userSecondname"));
                         userPhoneCol.setCellValueFactory(new PropertyValueFactory<>("userNumber"));
-                        userRentColumn.setCellValueFactory(new PropertyValueFactory<>("userRentedBook"));
+                       // userRentColumn.setCellValueFactory(new PropertyValueFactory<>("userRentedBook"));
+                       // new PropertyValueFactory<>("address");
+
         }
         private void refreshTable() {
                 try {
                         userList.clear();
-                        query = "SELECT * FROM library.users;";
+                        query = "SELECT id,userName,userSecondName,userPhone FROM library.users;";
                         preparedStatement = connection.prepareStatement(query);
                         resultSet = preparedStatement.executeQuery();
                         while (resultSet.next()){ userList.add(new User(
                                 resultSet.getString("userName"),
                                 resultSet.getString("userSecondName"),
                                 resultSet.getString("userPhone"),
-                                resultSet.getInt("book"),
                                 resultSet.getInt("id")));
                                 usersTableview.setItems(userList);
                         }
                 } catch (SQLException ex) {
-                        Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(UserAccountingController.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
         private void deletion(){
@@ -102,7 +109,7 @@ public class UserAccountingController {
                         preparedStatement.execute();
                         refreshTable();
                 } catch (SQLException ex) {
-                        Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(UserAccountingController.class.getName()).log(Level.SEVERE, null, ex);
                 }
         }
         FilteredList<User> filteredData = new FilteredList<>(userList, b->true);
