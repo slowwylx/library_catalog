@@ -17,7 +17,7 @@
             <Font size="17.0" />
          </font>
       </Text>
-      <Button fx:id="logInButton" layoutX="161.0" layoutY="75.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="68.0" style="-fx-background-color: #FEF6EB; -fx-cursor: and;" text="Log In" textFill="#2d01cd">
+      <Button fx:id="logInButton" layoutX="161.0" layoutY="75.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="68.0" style="-fx-background-color: #FEF6EB; -fx-cursor: and;" text="Log In" textFill="#2a02cc">
          <font>
             <Font size="16.0" />
          </font>

@@ -2,6 +2,7 @@ package com.example.library.controllers;
 
 import java.sql.*;
 
+import java.util.function.Predicate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -56,14 +57,14 @@ public class MainController {
     @FXML
     private ComboBox<String> typesOfPapers;
     @FXML
-    private Button userButtonMain;
+    private FontAwesomeIconView userButtonMain;
     @FXML
     private TableColumn<Book, Integer> yearOfPublishCol;
     @FXML
     private FontAwesomeIconView refreshIcon;
     @FXML
     private FontAwesomeIconView closeButton;
-
+    private String litType;
     private AddViewController addViewController;
     private GiveOutController giveOutController;
     String query = null;
@@ -75,39 +76,49 @@ public class MainController {
 
     @FXML
     void initialize() {
-        //conn();
-        System.out.println(Thread.activeCount());
+
         loadDate();
         loadComboBox();
         search();
         addButton.setOnAction(actionEvent -> {
-            add = false;
-            Dlg.showWindow("add-view.fxml", false,null);
+            add = true;
+            addViewController=Dlg.showWindow("add-view.fxml",false,(AddViewController controller)->{
+            });
             refreshTable();
         });
-
         giveOutButton.setOnAction(actionEvent -> {
             selectRow = mainTable.getSelectionModel().getSelectedItem();
-            if(selectRow.getIsAvailable().equalsIgnoreCase("available")) {
+            if (selectRow.getIsAvailable().equalsIgnoreCase("available")) {
                 Dlg.showWindow("give-out-view.fxml", false, null);
-            }else {
-                Dlg.showWindow("already-rented.fxml",false,null);
+            } else {
+                Dlg.showWindow("already-rented.fxml", false, null);
             }
             refreshTable();
         });
 
-        userButtonMain.setOnAction(actionEvent -> {
-            Dlg.showWindow("sign-in-view.fxml", false,null);
+
+        userButtonMain.setOnMouseClicked(mouseEvent -> {
+            Dlg.showWindow("sign-in-view.fxml", false, null);
+            refreshTable();
+        });
+
+        typesOfPapers.setOnAction(actionEvent -> {
+            filtr(typesOfPapers.getSelectionModel().getSelectedItem());
         });
 
         editMainTableButton.setOnAction(actionEvent -> {
-            add = true;
+            add = false;
             selectRow = mainTable.getSelectionModel().getSelectedItem();
                 addViewController=Dlg.showWindow("add-view.fxml",false,(AddViewController controller) ->{
-                controller.setTextField(selectRow.getId(),selectRow.getName(),selectRow.getAuthor(),selectRow.getPages(),selectRow.getYearOfissue());
+                controller.setTextField(selectRow.getId(),
+                                        selectRow.getName(),
+                                        selectRow.getAuthor(),
+                                        selectRow.getPages(),
+                                        selectRow.getYearOfissue());
             });
             refreshTable();
         });
+
         deleteButton.setOnAction(actionEvent -> {
             selectRow = mainTable.getSelectionModel().getSelectedItem();
             if(selectRow.getIsAvailable().equalsIgnoreCase("rented")){
@@ -119,8 +130,8 @@ public class MainController {
                 }
             }
         });
-        refreshIcon.setOnMouseClicked(mouseEvent -> {
 
+        refreshIcon.setOnMouseClicked(mouseEvent -> {
             refreshTable();
         });
     }
@@ -128,6 +139,7 @@ public class MainController {
     private void loadDate() {
         try {
             connection = DBconnection.getDbConnection();
+            refreshTable();
             tableNumber.setCellValueFactory(new PropertyValueFactory<>("id"));
             tableName.setCellValueFactory(new PropertyValueFactory<>("name"));
             pagesCol.setCellValueFactory(new PropertyValueFactory<>("pages"));
@@ -144,10 +156,8 @@ public class MainController {
     }
 
     private final ObservableList<Book> bookList = FXCollections.observableArrayList();
-
     private void refreshTable() {
         try {
-            String status;
             connection = DBconnection.getDbConnection();
             bookList.clear();
             query = "SELECT * FROM library.bookcharacter;";
@@ -162,7 +172,6 @@ public class MainController {
                         resultSet.getString(LITERATURE_AUTHOR),
                        status(resultSet.getString(LITERATURE_AVAILABILITY))
                 ));
-                mainTable.setItems(bookList);
             }
         } catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
@@ -186,7 +195,6 @@ public class MainController {
     }
 
     ObservableList<Literature> literatureList = FXCollections.observableArrayList();
-
     private void loadComboBox() {
         try {
             connection = DBconnection.getDbConnection();
@@ -195,18 +203,21 @@ public class MainController {
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             ObservableList<String> comboBox = FXCollections.observableArrayList();
+            comboBox.add("All");
             while (resultSet.next()) {
                 literatureList.add(new Literature((resultSet.getString("bookType"))));
                 comboBox.add(resultSet.getString("bookType"));
-                typesOfPapers.setItems(comboBox);
             }
+            typesOfPapers.setItems(comboBox);
         } catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
+        }finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }
@@ -231,33 +242,72 @@ public class MainController {
     }
 
 
-    FilteredList<Book> filteredData = new FilteredList<>(bookList, b -> true);
-
+    FilteredList<Book> filteredData = new FilteredList<>(bookList, b -> searchHelper(searchLiteratureField.getText(),book));
     private void search() {
+        Predicate<Book> bookPredicate = book -> searchHelper(searchLiteratureField.getText(),book);
         searchLiteratureField.textProperty().addListener((observableValue, oldValue, newValue) -> {
-            filteredData.setPredicate(book -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lowerCase = newValue.toLowerCase();
-                if (book.getName().toLowerCase().contains(lowerCase)) {
-                    return true; // Filter matches name.
-                } else if (book.getAuthor().toLowerCase().contains(lowerCase)) {
-                    return true; // Filter matches author.
-                } else if (String.valueOf(book.getYearOfissue()).contains(lowerCase)) {
-                    return true;
-                } else
-                    return false; // Does not match.
-            });
+                filteredData.setPredicate(null);
+                filteredData.setPredicate(bookPredicate);
         });
         SortedList<Book> sortedData = new SortedList<>(filteredData);
         sortedData.comparatorProperty().bind(mainTable.comparatorProperty());
         mainTable.setItems(sortedData);
     }
-    @FXML
-    private void close(MouseEvent event) {
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        stage.close();
+    private boolean searchHelper(String text,Book book){
+        if (text == null || text.isEmpty()) {
+            return true;
+        }
+        String lowerCase = text.toLowerCase();
+        if (book.getName().toLowerCase().contains(lowerCase)) {
+            return true; // Filter matches name.
+        } else if (book.getAuthor().toLowerCase().contains(lowerCase)) {
+            return true; // Filter matches author.
+        } else if (String.valueOf(book.getYearOfissue()).contains(lowerCase)) {
+            return true;
+        } else
+            return book.getName().contains(text); // Does not match.
     }
+    ObservableList<Book> category = FXCollections.observableArrayList();
 
+    private void filtr(String litType){
+            switch (litType) {
+                case "Book" -> litType = "1";
+                case "Magazine" -> litType = "2";
+                case "Newspaper" -> litType = "3";
+                case "Autoreferat" -> litType = "4";
+                case "All" -> litType = "0";
+            }
+            try{
+            connection = DBconnection.getDbConnection();
+            category.clear();
+            if(!litType.equals("0")) {
+                query = "SELECT * FROM bookcharacter WHERE (bookType='" + litType + "')";
+            }else{
+                refreshTable();
+            }
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+                while (resultSet.next()) {
+                    category.add(new Book(
+                            resultSet.getInt(LITERATURE_ID),
+                            resultSet.getString(LITERATURE_NAME),
+                            resultSet.getInt(LITERATURE_YEAR),
+                            resultSet.getInt(LITERATURE_PAGES),
+                            resultSet.getString(LITERATURE_AUTHOR),
+                            status(resultSet.getString(LITERATURE_AVAILABILITY))
+                    ));
+                    mainTable.setItems(category);
+                }
+        } catch (SQLException ex) {
+            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+                if (resultSet != null) {
+                    try {
+                        resultSet.close();
+                    } catch (SQLException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+    }
 }

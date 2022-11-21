@@ -38,13 +38,6 @@ public class AbonentController {
 
     @FXML
     private Button giveBackButton;
-
-    @FXML
-    private GridPane gridPaneId;
-
-
-    @FXML
-    private Text headerText;
     @FXML
     private Button giveOutButton;
     @FXML
@@ -74,28 +67,26 @@ public class AbonentController {
     Connection connection = null;
     ResultSet resultSet = null;
     PreparedStatement preparedStatement;
-
-
     private Book book;
+    private Book selectedBookInUser;
     @FXML
     void initialize() {
         setLabelField();
+        loadDate();
+        refreshTable();
 
         editUserButton.setOnMouseClicked(mouseEvent -> {
            Dlg.showWindow("editPerson.fxml", false,null);
 
         });
         giveOutButton.setOnAction(actionEvent -> {
-            giveOut=false;
             reestrSet();
             giveOutButton.getScene().getWindow().hide();
         });
-        loadDate();
-        refreshTable();
+
         giveBackButton.setOnAction(actionEvent -> {
-            giveOut=true;
+            selectedBookInUser = userLitTable.getSelectionModel().getSelectedItem();
             delete();
-            refreshTable();
         });
 
     }
@@ -113,26 +104,49 @@ public class AbonentController {
             }
         }catch(SQLException ex){
             Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            if (resultSet != null) {
+                try {
+                    resultSet.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
     private void reestrSet(){
-        try{
-            connection = DBconnection.getDbConnection();
-            query = "INSERT INTO reestr (`book`, `renterer`) VALUES (?, ?)";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, String.valueOf(selectRow.getId()));
-            preparedStatement.setString(2, String.valueOf(selectUser.getId()));
-            boolean success = preparedStatement.execute();
-            if(!success){
-                setRentTrue();
+        boolean isDel;
+        if(alreadyRented()>=1){
+            Dlg.showWindow("already-rented.fxml",false,null);
+            isDel=false;
+            setRentTrue(isDel);
+        }else {
+            try {
+                connection = DBconnection.getDbConnection();
+                query = "INSERT INTO reestr (`book`, `renterer`) VALUES (?, ?)";
+                preparedStatement = connection.prepareStatement(query);
+                preparedStatement.setString(1, String.valueOf(selectRow.getId()));
+                preparedStatement.setString(2, String.valueOf(selectUser.getId()));
+                boolean failure = preparedStatement.execute();
+                if (!failure) {
+                    isDel=false;
+                    setRentTrue(isDel);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
+            }finally {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
             }
-        }catch(SQLException ex){
-            Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     private void loadDate() {
         try {
             connection = DBconnection.getDbConnection();
+            refreshTable();
             tableName.setCellValueFactory(new PropertyValueFactory<>("name"));
             pagesCol.setCellValueFactory(new PropertyValueFactory<>("pages"));
             tableAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
@@ -141,7 +155,7 @@ public class AbonentController {
             try {
                 connection.close();
             } catch (SQLException ex) {
-                Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -151,7 +165,13 @@ public class AbonentController {
         try {
             connection = DBconnection.getDbConnection();
             userRentList.clear();
-            query = "SELECT reestr.id,bookcharacter.nameOfBook,bookcharacter.pages,bookcharacter.yearOfPublish,bookcharacter.author FROM reestr INNER JOIN users ON users.id=reestr.renterer INNER JOIN bookcharacter ON bookcharacter.id=reestr.book WHERE (users.id='"+selectUser.getId()+"')";
+            query = "SELECT bookcharacter.id,bookcharacter.nameOfBook,bookcharacter.pages,bookcharacter.yearOfPublish,bookcharacter.author " +
+                    "FROM reestr " +
+                    "INNER JOIN users " +
+                    "ON users.id=reestr.renterer " +
+                    "INNER JOIN bookcharacter " +
+                    "ON bookcharacter.id=reestr.book " +
+                    "WHERE (users.id='"+selectUser.getId()+"')";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
@@ -162,10 +182,10 @@ public class AbonentController {
                         resultSet.getInt(LITERATURE_YEAR),
                         resultSet.getString(LITERATURE_AUTHOR)
                 ));
-                userLitTable.setItems(userRentList);
+               userLitTable.setItems(userRentList);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             if (resultSet != null) {
                 try {
@@ -176,16 +196,19 @@ public class AbonentController {
             }
         }
     }
-    public static void setRentTrue(){
+    private void setRentTrue(Boolean isDel){
         Connection connection = null;
         PreparedStatement preparedStatement = null;
-        ResultSet resultSet = null;
-        String queryStatus = "UPDATE bookcharacter SET isrented=? WHERE id = '"+selectRow.getId()+"'";
         try{
+            if(isDel==false) {
+                query = "UPDATE bookcharacter SET isrented=? WHERE id = '" + selectRow.getId() + "'";
+            }else {
+                query = "UPDATE bookcharacter SET isrented=? WHERE id = '" + selectedBookInUser.getId() + "'";
+            }
             connection = DBconnection.getDbConnection();
-            preparedStatement = connection.prepareStatement(queryStatus);
-            if(giveOut==false) {
-                preparedStatement.setString(1, "0");
+            preparedStatement = connection.prepareStatement(query);
+            if(isDel==false) {
+                preparedStatement.setString(1,"0");
             }else {
                 preparedStatement.setString(1,"1");
             }
@@ -199,15 +222,14 @@ public class AbonentController {
         try {
             connection = DBconnection.getDbConnection();
             book = userLitTable.getSelectionModel().getSelectedItem();
-            query = "DELETE FROM reestr WHERE id  = " + book.getId();
+            query = "DELETE FROM reestr WHERE book = " + book.getId();
             preparedStatement = connection.prepareStatement(query);
-           boolean success = preparedStatement.execute();
-           if(!success){
-               setRentTrue();
-           }
+            preparedStatement.execute();
+            boolean deleted = true;
+            setRentTrue(deleted);
             refreshTable();
         } catch (SQLException ex) {
-            Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 connection.close();
@@ -215,6 +237,28 @@ public class AbonentController {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private int alreadyRented(){
+        int isRented = 0;
+        try {
+            query = "SELECT reestr.book FROM reestr where book = "+selectRow.getId();
+            connection = DBconnection.getDbConnection();
+            preparedStatement = connection.prepareStatement(query);
+            resultSet = preparedStatement.executeQuery();
+            if(resultSet.isBeforeFirst()){
+                isRented++;
+            }
+        }catch (SQLException ex){
+            Logger.getLogger(AbonentController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return isRented;
     }
 
 }

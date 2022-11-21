@@ -1,5 +1,6 @@
 package com.example.library;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ public class Dlg {
             }
             final var stage = new Stage();
             stage.setScene(new Scene(parent));
+
             stage.setResizable(myScale);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.showAndWait();

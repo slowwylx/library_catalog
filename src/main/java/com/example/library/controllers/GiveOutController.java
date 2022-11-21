@@ -11,9 +11,11 @@ public class GiveOutController {
     void initialize() {
             confirmButton.setOnAction(actionEvent -> {
                 Dlg.showWindow("sign-in-view.fxml", false,null);
+                confirmButton.getScene().getWindow().hide();
             });
             declineButton.setOnAction(actionEvent -> {
                 Dlg.showWindow("add-new-user.fxml", false,null);
+                declineButton.getScene().getWindow().hide();
             });
     }
 

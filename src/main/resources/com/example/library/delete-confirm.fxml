@@ -12,7 +12,7 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <Text layoutX="56.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you really want to delete this field? This process cannot be undone" textAlignment="CENTER" wrappingWidth="217.13671875" />
+      <Text layoutX="56.0" layoutY="79.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Do you really want to delete current field? This process cannot be undone" textAlignment="CENTER" wrappingWidth="217.13671875" />
       <Button fx:id="cancelDelitionButton" layoutX="89.0" layoutY="108.0" mnemonicParsing="false" style="-fx-background-color: #BEB9B5; -fx-border-radius: 5; -fx-background-radius: 5;" text="Cancel" />
       <Button fx:id="confirmDeletionButton" layoutX="196.0" layoutY="108.0" mnemonicParsing="false" style="-fx-background-color: #cc0c0c; -fx-border-radius: 5; -fx-background-radius: 5;" text="Delete" textFill="WHITE" />
    </children>

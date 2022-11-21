@@ -14,6 +14,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
+
 import static com.example.library.service.Global.*;
 public class AddViewController {
     @FXML
@@ -28,13 +30,26 @@ public class AddViewController {
     private TextField toastAddNumOfPages;
     @FXML
     private TextField toastAddYearOfIssue;
+    @FXML
+    private Text errorAuth;
+
+    @FXML
+    private Text errorBookName;
+
+    @FXML
+    private Text errorPages;
+
+    @FXML
+    private Text errorYearIssue;
 
     @FXML
     void initialize() {
         loadComboBox();
         toastConfirmAddButton.setOnAction(actionEvent -> {
             save();
-            toastConfirmAddButton.getScene().getWindow().hide();
+            if(success) {
+                toastConfirmAddButton.getScene().getWindow().hide();
+            }
         });
     }
 
@@ -44,27 +59,38 @@ public class AddViewController {
     PreparedStatement preparedStatement;
     private String rent = "1";
     private String type;
-    boolean check = false;
+    boolean check,success = false;
 
-    private void save() {
-            connection = DBconnection.getDbConnection();
+
+    public void save() {
+
             String name = toastAddName.getText().trim();
             String author = toastAddAuthor.getText().trim();
             String numOfPages = toastAddNumOfPages.getText().trim();
             String yearOfIssue = toastAddYearOfIssue.getText().trim();
             type = toastAddChoosePicker.getSelectionModel().getSelectedItem();
-            if (type.equals("Book")) {
-                type = "1";
+            if(name.isEmpty()|| author.isEmpty()||numOfPages.isEmpty()||numOfPages.equals("0")||yearOfIssue.isEmpty()){
+                errorBookName.setText("Fill the gaps");
+                errorAuth.setText("Fill the gaps");
+                errorPages.setText("Fill the gaps");
+                errorYearIssue.setText("Fill the gaps");
+                success=false;
+            }else {
+                switch (type) {
+                    case "Book" -> type = "1";
+                    case "Magazine" -> type = "2";
+                    case "Newspaper" -> type = "3";
+                    case "Autoreferat" -> type = "4";
+                }
+                success = true;
+                getQuery();
+                insert();
+
             }
-            System.out.println(type);
-            getQuery();
-            insert();
-        }
-        private void getQuery () {
+    }
+
+    private void getQuery () {
             if (!add) {
-                query = "INSERT INTO `bookcharacter`(`nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType` , `isrented`) VALUES (?,?,?,?,?,?)";
-                check = false;
-            } else {
                 check = true;
                 query = "UPDATE `bookcharacter` SET " +
                         "   `nameOfBook` = ?," +
@@ -72,10 +98,14 @@ public class AddViewController {
                         "   `pages` = ?," +
                         "   `yearOfPublish` = ?," +
                         "   `bookType` = ? WHERE (`id` = '" + selectRow.getId() + "')";
+            } else {
+                query = "INSERT INTO `bookcharacter`(`nameOfBook`, `author`, `pages`, `yearOfPublish`, `bookType` , `isrented`) VALUES (?,?,?,?,?,?)";
+                check = false;
             }
-        }
-        private void insert () {
-            try {
+    }
+    private void insert () {
+        try {
+            connection = DBconnection.getDbConnection();
             preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, toastAddName.getText());
             preparedStatement.setString(2, toastAddAuthor.getText());
@@ -86,11 +116,17 @@ public class AddViewController {
                 preparedStatement.setString(6, rent);
                 preparedStatement.executeUpdate();
             }else {
-
                 preparedStatement.execute();
             }
         }catch(SQLException ex){
             Logger.getLogger(AddViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -102,6 +138,7 @@ public class AddViewController {
         toastAddYearOfIssue.setText(String.valueOf(yearOfIssue));
         type = toastAddChoosePicker.getSelectionModel().getSelectedItem();
     }
+
     ObservableList<Literature> literatureList = FXCollections.observableArrayList();
     private void loadComboBox() {
         try {
@@ -117,7 +154,12 @@ public class AddViewController {
             }
         } catch (SQLException ex) {
             Logger.getLogger(AddViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
-
 }

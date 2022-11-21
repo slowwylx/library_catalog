@@ -75,7 +75,7 @@ public class UserAccountingController {
         ObservableList<User> userList = FXCollections.observableArrayList();
 
         private void loadDate() {
-                        connection = DBconnection.getDbConnection();
+                        //connection = DBconnection.getDbConnection();
                         usernameCol.setCellValueFactory(new PropertyValueFactory<>("userName"));
                         userSecondNameCol.setCellValueFactory(new PropertyValueFactory<>("userSecondname"));
                         userPhoneCol.setCellValueFactory(new PropertyValueFactory<>("userNumber"));
@@ -85,6 +85,7 @@ public class UserAccountingController {
         }
         private void refreshTable() {
                 try {
+                        connection = DBconnection.getDbConnection();
                         userList.clear();
                         query = "SELECT id,userName,userSecondName,userPhone FROM library.users;";
                         preparedStatement = connection.prepareStatement(query);
@@ -94,10 +95,18 @@ public class UserAccountingController {
                                 resultSet.getString("userSecondName"),
                                 resultSet.getString("userPhone"),
                                 resultSet.getInt("id")));
-                                usersTableview.setItems(userList);
+                                //usersTableview.setItems(userList);
                         }
                 } catch (SQLException ex) {
                         Logger.getLogger(UserAccountingController.class.getName()).log(Level.SEVERE, null, ex);
+                }finally {
+                        if (resultSet != null) {
+                                try {
+                                        resultSet.close();
+                                } catch (SQLException e) {
+                                        throw new RuntimeException(e);
+                                }
+                        }
                 }
         }
         private void deletion(){
@@ -110,6 +119,12 @@ public class UserAccountingController {
                         refreshTable();
                 } catch (SQLException ex) {
                         Logger.getLogger(UserAccountingController.class.getName()).log(Level.SEVERE, null, ex);
+                }finally {
+                        try {
+                                connection.close();
+                        } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                        }
                 }
         }
         FilteredList<User> filteredData = new FilteredList<>(userList, b->true);

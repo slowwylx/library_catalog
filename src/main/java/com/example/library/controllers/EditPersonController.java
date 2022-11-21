@@ -6,6 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +18,17 @@ import java.util.logging.Logger;
 import static com.example.library.service.Global.*;
 
 public class EditPersonController {
+    @FXML
+    private Text errorAddress;
+
+    @FXML
+    private Text errorName;
+
+    @FXML
+    private Text errorPhone;
+
+    @FXML
+    private Text errorSecName;
     @FXML
     private TextField editAddress;
 
@@ -30,9 +42,6 @@ public class EditPersonController {
     private TextField editSecondName;
 
     @FXML
-    private AnchorPane toastAdd;
-
-    @FXML
     private Button toastConfirmAddButton;
     String query = null;
     Connection connection = null;
@@ -42,13 +51,16 @@ public class EditPersonController {
     void initialize() {
         setText();
         toastConfirmAddButton.setOnAction(actionEvent -> {
-            getQuery();
-            insert();
-            if (added) {
-                toastConfirmAddButton.getScene().getWindow().hide();
+            if(check(editNum.getText())>=1){
+                errorPhone.setText("Already registered!");
+            }else{
+                getQuery();
+                insert();
+                if (added) {
+                    toastConfirmAddButton.getScene().getWindow().hide();
+                }
             }
         });
-
     }
 
     private void getQuery () {
@@ -65,22 +77,31 @@ public class EditPersonController {
             String secName = editSecondName.getText();
             String number = editNum.getText();
             String address = editAddress.getText();
-
-            if (check(number) >= 1) {
-                Dlg.showWindow("userexist.fxml",false,null);
-            } else {
+            if(name.isEmpty()||secName.isEmpty()||number.isEmpty()||address.isEmpty()){
+                errorName.setText("Fill the gaps");
+                errorSecName.setText("Fill the gaps");
+                errorPhone.setText("Fill the gaps");
+                errorAddress.setText("Fill the gaps");
+            }else {
                 connection = DBconnection.getDbConnection();
                 preparedStatement = connection.prepareStatement(query);
                 preparedStatement.setString(1, name);
                 preparedStatement.setString(2, secName);
                 preparedStatement.setString(3, number);
                 preparedStatement.setString(4, address);
-                preparedStatement.execute();
-                added=true;
+                boolean status = preparedStatement.execute();
+                if (!status) {
+                    added = true;
+                }
             }
-
         }catch(SQLException ex){
             Logger.getLogger(EditPersonController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
     public void setText(){
@@ -97,6 +118,12 @@ public class EditPersonController {
             }
         }catch(SQLException ex){
                 Logger.getLogger(EditPersonController.class.getName()).log(Level.SEVERE, null, ex);
+        }finally {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }

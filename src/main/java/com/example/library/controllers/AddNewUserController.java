@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 import static com.example.library.service.Global.*;
 
 public class AddNewUserController {
+
         @FXML
         private Button confirmRegistrButton;
         @FXML
@@ -61,35 +62,35 @@ public class AddNewUserController {
                                 String name = registrNameField.getText().trim();
                                 String secondName = registrSecondNameField.getText().trim();
                                 String phone = registrPhoneField.getText().trim();
-                                String bookrent = null;
                                 String address = null;
                                 if(name.isEmpty() || secondName.isEmpty()|| phone.length()<9 || phone.length()>13){
                                               nameErrField.setText("Fill the gaps");
                                               secondNameErrField.setText("Fill the gaps");
-                                              nameErrField.setText("");
-                                              secondNameErrField.setText("");
-                                              phoneErrField.setText("");
                                               phoneErrField.setText("Enter correct number!");
                                 }
                                 else {
-                                        query = "INSERT INTO `users`(`book`, `userName`, `userSecondName`, `userPhone`,`userAdress` ) VALUES (?,?,?,?,?)";
-                                        //fix bug with book which is rented
+                                        query = "INSERT INTO `users`(`userName`, `userSecondName`, `userPhone`,`userAdress` ) VALUES (?,?,?,?)";
                                         preparedStatement = connection.prepareStatement(query);
-                                        preparedStatement.setString(1, bookrent);
-                                        preparedStatement.setString(2, name);
-                                        preparedStatement.setString(3, secondName);
-                                        preparedStatement.setString(4, phone);
-                                        preparedStatement.setString(5, address);
+
+                                        preparedStatement.setString(1, name);
+                                        preparedStatement.setString(2, secondName);
+                                        preparedStatement.setString(3, phone);
+                                        preparedStatement.setString(4, address);
                                         preparedStatement.executeUpdate();
                                         added = true;
                                 }
                         }
-                } catch ( SQLException ex) {
+                } catch (SQLException ex) {
                         Logger.getLogger(AddNewUserController.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                finally {
+                        try {
+                                connection.close();
+                        } catch (SQLException e) {
+                                throw new RuntimeException(e);
+                        }
+                }
         }
-
-
 }
 
 
