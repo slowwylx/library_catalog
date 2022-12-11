@@ -29,7 +29,7 @@ import static com.example.library.DBConnection.Const.LITERATURE_AVAILABILITY;
 import static com.example.library.service.Global.*;
 
 
-public class AbonentController {
+public class AbonentController extends EditPersonController {
     @FXML
     private Label adressLabel;
 

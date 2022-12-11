@@ -63,19 +63,30 @@ public class AddViewController {
 
 
     public void save() {
-
             String name = toastAddName.getText().trim();
             String author = toastAddAuthor.getText().trim();
             String numOfPages = toastAddNumOfPages.getText().trim();
             String yearOfIssue = toastAddYearOfIssue.getText().trim();
             type = toastAddChoosePicker.getSelectionModel().getSelectedItem();
-            if(name.isEmpty()|| author.isEmpty()||numOfPages.isEmpty()||numOfPages.equals("0")||yearOfIssue.isEmpty()){
-                errorBookName.setText("Fill the gaps");
-                errorAuth.setText("Fill the gaps");
-                errorPages.setText("Fill the gaps");
-                errorYearIssue.setText("Fill the gaps");
-                success=false;
-            }else {
+            if(name.isEmpty()||author.isEmpty()||numOfPages.isEmpty()||numOfPages.equals("0")||yearOfIssue.isEmpty()) {
+                if (name.isEmpty()) {
+                    errorBookName.setText("Fill the gaps");
+                    success = false;
+                } else errorBookName.setText("");
+                if (author.isEmpty()) {
+                    errorAuth.setText("Fill the gaps");
+                    success = false;
+                } else errorAuth.setText("");
+                if (numOfPages.isEmpty() || numOfPages.equals("0")) {
+                    errorPages.setText("Fill the gaps");
+                    success = false;
+                } else errorPages.setText("");
+                if (yearOfIssue.isEmpty()) {
+                    errorYearIssue.setText("Fill the gaps");
+                    success = false;
+                } else errorYearIssue.setText("");
+            }
+            else {
                 switch (type) {
                     case "Book" -> type = "1";
                     case "Magazine" -> type = "2";

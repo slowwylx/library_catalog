@@ -2,7 +2,7 @@ package com.example.library.controllers;
 import com.example.library.Dlg;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-public class GiveOutController {
+public class GiveOutController extends UserAccountingController {
     @FXML
     private Button confirmButton;
     @FXML

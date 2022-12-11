@@ -13,25 +13,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 
-import javafx.scene.Node;
+
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 
 import com.example.library.literature.Book;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+
 
 
 import static com.example.library.DBConnection.Const.*;
 import static com.example.library.service.Global.*;
 
-public class MainController {
+public class MainController extends ErrorDeleteController {
     @FXML
     private Button addButton;
     @FXML
@@ -86,6 +82,7 @@ public class MainController {
             });
             refreshTable();
         });
+
         giveOutButton.setOnAction(actionEvent -> {
             selectRow = mainTable.getSelectionModel().getSelectedItem();
             if (selectRow.getIsAvailable().equalsIgnoreCase("available")) {
@@ -278,26 +275,26 @@ public class MainController {
                 case "All" -> litType = "0";
             }
             try{
-            connection = DBconnection.getDbConnection();
-            category.clear();
-            if(!litType.equals("0")) {
-                query = "SELECT * FROM bookcharacter WHERE (bookType='" + litType + "')";
-            }else{
-                refreshTable();
-            }
-            preparedStatement = connection.prepareStatement(query);
-            resultSet = preparedStatement.executeQuery();
-                while (resultSet.next()) {
-                    category.add(new Book(
-                            resultSet.getInt(LITERATURE_ID),
-                            resultSet.getString(LITERATURE_NAME),
-                            resultSet.getInt(LITERATURE_YEAR),
-                            resultSet.getInt(LITERATURE_PAGES),
-                            resultSet.getString(LITERATURE_AUTHOR),
-                            status(resultSet.getString(LITERATURE_AVAILABILITY))
-                    ));
-                    mainTable.setItems(category);
+                connection = DBconnection.getDbConnection();
+                category.clear();
+                if(!litType.equals("0")) {
+                    query = "SELECT * FROM bookcharacter WHERE (bookType='" + litType + "')";
+                }else{
+                    refreshTable();
                 }
+                preparedStatement = connection.prepareStatement(query);
+                resultSet = preparedStatement.executeQuery();
+                    while (resultSet.next()) {
+                        category.add(new Book(
+                                resultSet.getInt(LITERATURE_ID),
+                                resultSet.getString(LITERATURE_NAME),
+                                resultSet.getInt(LITERATURE_YEAR),
+                                resultSet.getInt(LITERATURE_PAGES),
+                                resultSet.getString(LITERATURE_AUTHOR),
+                                status(resultSet.getString(LITERATURE_AVAILABILITY))
+                        ));
+                        mainTable.setItems(category);
+                    }
         } catch (SQLException ex) {
             Logger.getLogger(MainController.class.getName()).log(Level.SEVERE, null, ex);
         } finally {

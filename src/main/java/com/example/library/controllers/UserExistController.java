@@ -1,13 +1,10 @@
 package com.example.library.controllers;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
 import com.example.library.Dlg;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
-public class UserExistController {
+public class UserExistController extends AddNewUserController {
 
     @FXML
     private Button logInButton;

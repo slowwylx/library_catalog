@@ -22,7 +22,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import static com.example.library.service.Global.*;
 
-public class UserAccountingController {
+public class UserAccountingController extends UserExistController {
         @FXML
         private Button chooseUserButton;
         @FXML

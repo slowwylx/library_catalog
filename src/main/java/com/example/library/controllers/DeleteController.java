@@ -3,7 +3,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import static com.example.library.service.Global.*;
 
-public class DeleteController {
+public class DeleteController extends UserAccountingController {
         @FXML
         private Button cancelDelitionButton;
 
