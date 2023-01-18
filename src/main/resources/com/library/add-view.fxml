@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="toastAdd" prefHeight="250.0" prefWidth="306.0" style="-fx-background-color: #FEF6EB;" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.controllers.mainView.AddViewController">
+   <children>
+      <ComboBox fx:id="toastAddChoosePicker" layoutX="32.0" layoutY="29.0" prefWidth="250.0" promptText="Choose type of literature" style="-fx-background-color: #BEB9B5;" />
+      <TextField fx:id="toastAddName" layoutX="32.0" layoutY="68.0" promptText="Book Name" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
+      <TextField fx:id="toastAddAuthor" layoutX="32.0" layoutY="111.0" promptText="Author" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
+      <TextField fx:id="toastAddNumOfPages" layoutX="32.0" layoutY="156.0" promptText="Number of pages" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
+      <TextField fx:id="toastAddYearOfIssue" layoutX="32.0" layoutY="199.0" promptText="Year of issue" style="-fx-background-color: #FEF6EB; -fx-border-color: #BEB9B5; -fx-border-radius: 5;" />
+      <Button fx:id="toastConfirmAddButton" layoutX="223.0" layoutY="200.0" mnemonicParsing="false" style="-fx-background-color: #bce085;" text="Confirm" />
+      <Text fx:id="errorBookName" fill="RED" layoutX="32.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="151.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="errorAuth" fill="RED" layoutX="32.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="151.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="errorPages" fill="RED" layoutX="32.0" layoutY="195.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="151.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="errorYearIssue" fill="RED" layoutX="32.0" layoutY="240.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="151.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+      <Text fx:id="errorTypeOfLit" fill="RED" layoutX="32.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="267.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
